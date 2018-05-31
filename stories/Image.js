@@ -9,7 +9,7 @@ storiesOf('Image/Image', module)
     </div>
   ))
   .add('cover', () => (
-    <Image src="http://via.placeholder.com/350x150" width="400px" height="200px" />
+    <Image src="http://via.placeholder.com/350x150" />
   ))
   .add('contain', () => (
     <Image

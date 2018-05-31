@@ -8,6 +8,7 @@ module.exports = {
     'Dialog': './src/components/Dialog/index.js',
     'Field': './src/components/Field/index.js',
     'Form': './src/components/Form/index.js',
+    'Image': './src/components/Image/index.js',
     'List': './src/components/List/index.js',
     'Menu': './src/components/Menu/index.js',
     'Paper': './src/components/Paper/index.js',

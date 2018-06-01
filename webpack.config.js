@@ -13,6 +13,7 @@ module.exports = {
     'Menu': './src/components/Menu/index.js',
     'Paper': './src/components/Paper/index.js',
     'Popover': './src/components/Popover/index.js',
+    'Section': './src/components/Section/index.js',
     'Stepper': './src/components/Stepper/index.js',
     'Table': './src/components/Table/index.js',
   },

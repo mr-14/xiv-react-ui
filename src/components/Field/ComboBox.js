@@ -61,7 +61,7 @@ class ComboBox extends React.Component {
     }
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  getDerivedStateFromProps = (nextProps, prevState) => {
     if (nextProps.value !== this.props.value) {
       this.setState({
         key: nextProps.value,

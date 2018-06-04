@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
-import { ComboText, MultiText, Text, AddableSelect, AutoSelect, DateRange } from '../src/components/Field'
+import { ComboText, MultiText, Text, AddableSelect, AutoSelect, DateRange, Counter } from '../src/components/Field'
 import { ComboForm } from '../src/components/Form'
 import AddIcon from '@material-ui/icons/Add'
 
@@ -162,3 +162,15 @@ storiesOf('Field/DateRange', module)
       />
     )
   })
+
+storiesOf('Field/Counter', module)
+  .addDecorator(story => (
+    <div style={{ width: 600 }}>
+      {story()}
+    </div>
+  ))
+  .add('default', () => {
+    return (
+      <Counter />
+    )
+  })  

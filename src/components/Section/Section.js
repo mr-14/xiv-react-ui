@@ -7,21 +7,28 @@ import Divider from '@material-ui/core/Divider'
 
 const styles = theme => ({
   root: {
+    marginBottom: theme.spacing.unit * 8,
   },
   content: {
     padding: theme.spacing.unit * 2,
+  },
+  noMargin: {
+    marginBottom: 0,
+  },
+  noPadding: {
+    padding: 0,
   }
 })
 
-function Section({ classes, title, children, disablePadding }) {
+function Section({ classes, title, children, disablePadding, disableMargin, showDivider }) {
   return (
-    <div className={classes.root}>
+    <div className={ClassNames(classes.root, disableMargin && classes.noMargin )}>
       <Typography variant="subheading" gutterBottom>{title}</Typography>
       <Divider />
-      <div className={ClassNames(!disablePadding && classes.content)}>
+      <div className={ClassNames(classes.content, disablePadding && classes.noPadding)}>
         {children}
       </div>
-      <Divider />
+      {showDivider && <Divider />}
     </div>
   )
 }
@@ -31,10 +38,14 @@ Section.propTypes = {
   children: PropTypes.node.isRequired,
   title: PropTypes.string,
   disablePadding: PropTypes.bool,
+  disableMargin: PropTypes.bool,
+  showDivider: PropTypes.bool,
 }
 
 Section.defaultProps = {
-  disablePadding: false
+  disablePadding: false,
+  disableMargin: false,
+  showDivider: true,
 }
 
 export default withStyles(styles, { withTheme: true })(Section)

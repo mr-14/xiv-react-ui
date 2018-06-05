@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import ClassNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
@@ -7,13 +8,23 @@ import RemoveIcon from '@material-ui/icons/Remove'
 
 const styles = theme => ({
   root: {
-    display: 'flex'
+    display: 'flex',
+    justifyContent: 'space-between',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderRadius: '2px',
   },
   button: {
     minWidth: 24,
   },
+  buttonLeft: {
+    borderRight: '1px solid rgba(0, 0, 0, 0.12)'
+  },
+  buttonRight: {
+    borderLeft: '1px solid rgba(0, 0, 0, 0.12)'
+  },
   input: {
-    width: 48,
+    flex: 1,
+    width: '100%',
     border: 0,
     fontSize: '24px',
     textAlign: 'center',
@@ -28,35 +39,46 @@ class Counter extends React.Component {
     super(props)
 
     this.state = {
-      value: props.min
+      value: props.value || props.min
     }
   }
 
   changeCount = event => {
-    const value = parseInt(event.target.value, 10)
+    let value = parseInt(event.target.value, 10)
     if (!value) { return }
 
-    if (value >= this.props.max) {
-      this.setState({ value: this.props.max })
-      return
+    if (value > this.props.max) {
+      value = this.props.max
     }
 
-    if (value <= this.props.min) {
-      this.setState({ value: this.props.min })
-      return
+    if (value < this.props.min) {
+      value = this.props.min
     }
 
     this.setState({ value })
+    this.props.onChange(this.props.id, value)
   }
 
   increaseCount = () => {
-    if (this.state.value >= this.props.max) { return }
-    this.setState({ value: this.state.value + 1 })
+    let value = this.state.value + 1
+
+    if (value > this.props.max) {
+      value = this.props.max
+    }
+
+    this.setState({ value })
+    this.props.onChange(this.props.id, value)
   }
 
   decreaseCount = () => {
-    if (this.state.value <= this.props.min) { return }
-    this.setState({ value: this.state.value - 1 })
+    let value = this.state.value - 1
+
+    if (value < this.props.min) {
+      value = this.props.min
+    }
+
+    this.setState({ value })
+    this.props.onChange(this.props.id, value)
   }
 
   render() {
@@ -64,9 +86,13 @@ class Counter extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Button className={classes.button} onClick={this.decreaseCount}><RemoveIcon /></Button>
+        <Button className={ClassNames(classes.button, classes.buttonLeft)} onClick={this.decreaseCount}>
+          <RemoveIcon />
+        </Button>
         <input className={classes.input} onChange={this.changeCount} value={this.state.value} />
-        <Button className={classes.button} onClick={this.increaseCount}><AddIcon /></Button>
+        <Button className={ClassNames(classes.button, classes.buttonRight)} onClick={this.increaseCount}>
+          <AddIcon />
+        </Button>
       </div>
     )
   }
@@ -74,8 +100,11 @@ class Counter extends React.Component {
 
 Counter.propTypes = {
   classes: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
   max: PropTypes.number,
   min: PropTypes.number,
+  value: PropTypes.number,
+  onChange: PropTypes.func.isRequired,
 }
 
 Counter.defaultProps = {

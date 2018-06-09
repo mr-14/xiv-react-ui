@@ -63,7 +63,6 @@ class IconPopover extends React.Component {
           className={classes.popover}
           open={open}
           anchorEl={anchorEl}
-          onClose={this.handleClose}
           onClick={this.handleClose}
           anchorOrigin={{
             vertical: anchorOriginVertical,

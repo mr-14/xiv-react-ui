@@ -171,6 +171,6 @@ storiesOf('Field/Counter', module)
   ))
   .add('default', () => {
     return (
-      <Counter />
+      <Counter id="mycounter" onChange={() => console.log('counter changed')} />
     )
   })  

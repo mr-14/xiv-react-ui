@@ -16,7 +16,7 @@ const styles = () => ({
     overflow: 'auto',
   },
   filterBar: {
-    ['@media print']: {
+    '@media print': {
       display: 'none'
     }
   }

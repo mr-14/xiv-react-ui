@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
-import { ViewTable, DataTable, SimpleTableFilter } from '../src/components/Table'
+import { ViewTable, DataTable, SimpleTableFilter, SelectableTable } from '../src/components/Table'
 import { IconPopover } from '../src/components/Popover'
 import { NavList } from '../src/components/List'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
@@ -63,6 +63,27 @@ storiesOf('Table/DataTable', module)
         Filter={SimpleTableFilter}
         onFetch={action(`filter table`)}
         pageToken='1234'
+      />
+    )
+  })
+
+storiesOf('Table/SelectableTable', module)
+  .addDecorator(story => (
+    <div style={{ width: '100%' }}>
+      {story()}
+    </div>
+  ))
+  .add('default', () => {
+    let values = ['col2']
+
+    return (
+      <SelectableTable
+        primaryKey="col1"
+        columns={columns}
+        rows={rows}
+        values={values}
+        rowActions={rowActions}
+        onChange={data => console.log(data)}
       />
     )
   })

@@ -50,6 +50,7 @@ class HoverPopover extends React.Component {
           className={!open ? classes.popperClose : ''}
           onMouseOver={this.handlePopperOpen}
           onMouseOut={this.handlePopperClose}
+          onClick={this.handlePopperClose}
         >
           <Grow in={open} style={{ transformOrigin: '0 0 0' }}>
             <Paper

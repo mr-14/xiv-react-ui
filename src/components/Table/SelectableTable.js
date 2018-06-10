@@ -9,7 +9,6 @@ import TableRow from '@material-ui/core/TableRow'
 import Paper from '../Paper'
 import Checkbox from '@material-ui/core/Checkbox'
 import SelectableTableHead from './components/SelectableTableHead'
-import AdvanceTableFilter from './components/AdvanceTableFilter'
 import EmptyRow from './components/EmptyRow'
 import { columnType } from '../../types'
 
@@ -20,18 +19,30 @@ const styles = theme => ({
   table: {
     minWidth: 800,
   },
-  tableWrapper: {
-    overflowX: 'auto',
-  },
+  filterBar: {
+    '@media print': {
+      display: 'none'
+    }
+  }
 })
 
 class SelectableTable extends React.Component {
-  handleClick = value => {
-    this.props.onSelect(value)
+  handleClick = (id, isSelected) => {
+    const { primaryKey, values } = this.props
+
+    if (isSelected) {
+      this.props.onChange([...values, id])
+    } else {
+      const list = [...values]
+      const idx = list.findIndex(item => (item[primaryKey] === id))
+      list.splice(idx, 1)
+      return list
+    }
   }
 
   isSelected = row => {
-    return this.props.value.id === row.id
+    const { primaryKey, values } = this.props
+    return !!values.find(item => (item[primaryKey] === row[primaryKey]))
   }
 
   renderRows = (columns, rows) => {
@@ -39,19 +50,20 @@ class SelectableTable extends React.Component {
       return <EmptyRow colSpan={columns.length + 1} />
     }
 
-    return rows.map((row, index) => {
+    return rows.map((row) => {
       const isSelected = this.isSelected(row)
+      const primaryId = row[this.props.primaryKey]
+
       return (
         <TableRow
-          key={row.id}
-          onClick={event => this.handleClick(row)}
+          key={primaryId}
           role="checkbox"
           aria-checked={isSelected}
           tabIndex={-1}
           selected={isSelected}
         >
           <TableCell padding="checkbox">
-            <Checkbox checked={isSelected} />
+            <Checkbox checked={isSelected} onClick={() => this.handleClick(primaryId, isSelected)} />
           </TableCell>
           {this.renderRowCell(columns, row)}
         </TableRow>
@@ -68,11 +80,13 @@ class SelectableTable extends React.Component {
   )
 
   render() {
-    const { classes, columns, rows } = this.props
-
+    const { classes, columns, filter, rows } = this.props
+    
     return (
       <Paper className={classes.root}>
-        <AdvanceTableFilter columns={columns} />
+        <div className={classes.filterBar}>
+          {filter && filter(this.handleFilter)}
+        </div>
         <Table className={classes.table}>
           <SelectableTableHead columns={columns} />
           <TableBody>
@@ -88,8 +102,15 @@ SelectableTable.propTypes = {
   classes: PropTypes.object.isRequired,
   columns: PropTypes.arrayOf(columnType).isRequired,
   rows: PropTypes.arrayOf(PropTypes.object),
-  onSelect: PropTypes.func.isRequired,
-  value: PropTypes.any,
+  values: PropTypes.array,
+  filter: PropTypes.func,
+  primaryKey: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+}
+
+SelectableTable.defaultProps = {
+  primaryKey: 'id',
+  values: [],
 }
 
 export default withStyles(styles, { withTheme: true })(SelectableTable)

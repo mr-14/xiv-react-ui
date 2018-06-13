@@ -51,26 +51,14 @@ const styles = theme => ({
 })
 
 class ComboBox extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
+  static getDerivedStateFromProps = (props, state) => {
+    return {
       key: props.value,
       value: this.getSelectedLabel(props.value),
-      suggestions: [],
     }
   }
 
-  getDerivedStateFromProps = (nextProps, prevState) => {
-    if (nextProps.value !== this.props.value) {
-      this.setState({
-        key: nextProps.value,
-        value: this.getSelectedLabel(nextProps.value),
-      })
-    }
-  }
-
-  getSelectedLabel = key => {
+  static getSelectedLabel = key => {
     if (!key) {
       return ''
     }
@@ -82,6 +70,16 @@ class ComboBox extends React.Component {
     }
 
     return ''
+  }
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      key: props.value,
+      value: ComboBox.getSelectedLabel(props.value),
+      suggestions: [],
+    }
   }
 
   getSuggestions = (value) => {

@@ -29,7 +29,7 @@ class SimpleForm extends React.Component {
     this.state = this.initState(props.fields, props.values)
   }
 
-  getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props, state) {
     let _value = {}
     for (const field of props.fields) {
       if (!field.id) {

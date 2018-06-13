@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import ClassNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = {
@@ -8,7 +9,7 @@ const styles = {
   },
 }
 
-function Image({ classes, src, size, height, width, align, valign }) {
+function Image({ classes, className, src, size, height, width, align, valign, onClick }) {
   const style = { 
     backgroundImage: `url("${src}")`,
     backgroundSize: size,
@@ -18,18 +19,20 @@ function Image({ classes, src, size, height, width, align, valign }) {
   }
   
   return (
-    <div className={classes.root} style={style} />
+    <div className={ClassNames(classes.root, className)} style={style} onClick={onClick} />
   )
 }
 
 Image.propTypes = {
   classes: PropTypes.object.isRequired,
+  className: PropTypes.string,
   src: PropTypes.string.isRequired,
   height: PropTypes.string,
   width: PropTypes.string,
   size: PropTypes.oneOf(['cover', 'contain']),
   align: PropTypes.oneOf(['left', 'right', 'center']),
   valign: PropTypes.oneOf(['top', 'bottom', 'center']),
+  onClick: PropTypes.func,
 }
 
 Image.defaultProps = {

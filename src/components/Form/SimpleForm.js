@@ -29,17 +29,15 @@ class SimpleForm extends React.Component {
     this.state = this.initState(props.fields, props.values)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.values && nextProps.values !== this.props.values) {
-      let _value = {}
-      for (const field of this.props.fields) {
-        if (!field.id) {
-          continue
-        }
-        _value[field.id] = nextProps.values[field.id] || (field.default || '')
+  getDerivedStateFromProps(props, state) {
+    let _value = {}
+    for (const field of props.fields) {
+      if (!field.id) {
+        continue
       }
-      this.setState({ ..._value, _dirty: { ...this.state._dirty } })
+      _value[field.id] = props.values[field.id] || (field.default || '')
     }
+    return { ..._value, _dirty: { ...state._dirty } }
   }
 
   initState = (fields, values) => {

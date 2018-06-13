@@ -18,22 +18,22 @@ storiesOf('Section', module)
       </Section>
     )
   })
-  .add('no divider', () => {
-    return (
-      <Section title="My Title" disablePadding showDivider={false}>
-        <Typography variant="body1">My Body</Typography>
-      </Section>
-    )
-  })
-  .add('with margin', () => {
+  .add('no margin', () => {
     return (
       <React.Fragment>
-        <Section title="My Title 1">
+        <Section title="My Title 1" disableMargin>
           <Typography variant="body1">My Body 1</Typography>
         </Section>
-        <Section title="My Title 2">
+        <Section title="My Title 2" disableMargin>
           <Typography variant="body1">My Body 2</Typography>
         </Section>
       </React.Fragment>
+    )
+  })
+  .add('with divider', () => {
+    return (
+      <Section title="My Title" disablePadding showDivider>
+        <Typography variant="body1">My Body</Typography>
+      </Section>
     )
   })

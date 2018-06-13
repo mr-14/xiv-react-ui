@@ -43,6 +43,10 @@ class Counter extends React.Component {
     }
   }
 
+  static getDerivedStateFromProps(props, state) {
+    return { value: props.value || props.min }
+  }
+
   changeCount = event => {
     let value = parseInt(event.target.value, 10)
     if (!value) { return }

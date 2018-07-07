@@ -29,16 +29,17 @@ class SimpleForm extends React.Component {
     this.state = this.initState(props.fields, props.values)
   }
 
-  static getDerivedStateFromProps(props, state) {
-    let _value = {}
-    for (const field of props.fields) {
-      if (!field.id) {
-        continue
-      }
-      _value[field.id] = props.values[field.id] || (field.default || '')
-    }
-    return { ..._value, _dirty: { ...state._dirty } }
-  }
+  // static getDerivedStateFromProps(props, state) {
+  //   let _value = {}
+  //   console.log(props)
+  //   for (const field of props.fields) {
+  //     if (!field.id) {
+  //       continue
+  //     }
+  //     _value[field.id] = (props.values && props.values[field.id]) || field.default || ''
+  //   }
+  //   return { ..._value, _dirty: { ...state._dirty } }
+  // }
 
   initState = (fields, values) => {
     let _value = {}, _dirty = {}
@@ -60,11 +61,15 @@ class SimpleForm extends React.Component {
 
   handleSubmit = action => () => {
     if (this.validateFields()) {
-      action.onSubmit(this.state)
+      action.onSubmit(this.state).then((resp, err) => {
+        console.log('resp', resp)
+        console.log('err', err)
+      })
       return
     }
 
     let _dirty = {}
+
     for (const fieldId of Object.keys(this.state._dirty)) {
       _dirty[fieldId] = true
     }

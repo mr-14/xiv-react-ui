@@ -56,7 +56,8 @@ class SimpleForm extends React.Component {
   }
 
   handleFieldChange = (fieldId, value) => {
-    this.setState({ [fieldId]: value })
+    const _dirty = { ...this.state._dirty[fieldId], [fieldId]: true } 
+    this.setState({ [fieldId]: value, _dirty })
   }
 
   handleSubmit = action => () => {
@@ -83,13 +84,22 @@ class SimpleForm extends React.Component {
         continue
       }
 
-      const { hasError } = validate(this.state[field.id], field.props.validators, true)
+      const refFields = this.getRefFields(field)
+      const { hasError } = validate(this.state[field.id], field.props.validators, true, refFields)
       if (hasError) {
-        console.error(field.id, hasError)
         return false
       }
     }
     return true
+  }
+
+  getRefFields = (field) => {
+    if (!field.props.refFields) { return null }
+
+    return field.props.refFields.reduce((list, item) => {
+      list[item] = this.state[item]
+      return list
+    }, {})
   }
 
   renderFields = (fields, readonly, profile) => {
@@ -107,6 +117,7 @@ class SimpleForm extends React.Component {
       props.disabled = readonly || props.disabled
       props.onChange = this.handleFieldChange
       props.value = this.state[field.id]
+      props.refValues = this.getRefFields(field)
       props.dirty = this.state._dirty[field.id]
       props.errorText = this.state._error ? this.state._error[field.id] : ''
       props.margin = 'dense'

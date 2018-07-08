@@ -1,5 +1,6 @@
 export { default as Text } from './Text'
 export { default as Password } from './Password'
+export { default as PasswordRepeat } from './PasswordRepeat'
 export { default as Lookup } from './Lookup'
 export { default as DatePicker } from './DatePicker'
 export { default as DateRange } from './DateRange'

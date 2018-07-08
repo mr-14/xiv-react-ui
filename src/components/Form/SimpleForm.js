@@ -16,17 +16,17 @@ const styles = theme => ({
     flex: '0 0 auto',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    // marginTop: theme.spacing.unit * 3,
+    margin: `0 ${theme.spacing.unit * 3}px ${theme.spacing.unit * 2}px`,
   },
   button: {
-    margin: theme.spacing.unit,
+    // margin: theme.spacing.unit,
   }
 })
 
 class SimpleForm extends React.Component {
   constructor(props) {
     super(props)
-    this.state = this.initState(props.fields, props.values)
+    this.state = this.initState(props.fields, props.values, props.errors)
   }
 
   // static getDerivedStateFromProps(props, state) {
@@ -41,7 +41,7 @@ class SimpleForm extends React.Component {
   //   return { ..._value, _dirty: { ...state._dirty } }
   // }
 
-  initState = (fields, values) => {
+  initState = (fields, values, errors) => {
     let _value = {}, _dirty = {}
 
     for (const field of fields) {
@@ -52,7 +52,7 @@ class SimpleForm extends React.Component {
       _dirty[field.id] = false
     }
 
-    return { ..._value, _dirty }
+    return { ..._value, _dirty, _error: errors }
   }
 
   handleFieldChange = (fieldId, value) => {
@@ -61,20 +61,20 @@ class SimpleForm extends React.Component {
 
   handleSubmit = action => () => {
     if (this.validateFields()) {
-      action.onSubmit(this.state).then((resp, err) => {
-        console.log('resp', resp)
-        console.log('err', err)
+      action.onSubmit(this.state).then(err => {
+        if (err) {
+          this.setState({ errors: err })
+        }
       })
-      return
+    } else {
+      let _dirty = {}
+
+      for (const fieldId of Object.keys(this.state._dirty)) {
+        _dirty[fieldId] = true
+      }
+
+      this.setState({ _dirty })
     }
-
-    let _dirty = {}
-
-    for (const fieldId of Object.keys(this.state._dirty)) {
-      _dirty[fieldId] = true
-    }
-
-    this.setState({ _dirty })
   }
 
   validateFields = () => {
@@ -92,7 +92,7 @@ class SimpleForm extends React.Component {
     return true
   }
 
-  renderFields = (fields, values, errors, readonly, profile) => {
+  renderFields = (fields, readonly, profile) => {
     return fields.map(field => {
       if (field.profile && !field.profile.includes(profile)) {
         return null
@@ -108,18 +108,18 @@ class SimpleForm extends React.Component {
       props.onChange = this.handleFieldChange
       props.value = this.state[field.id]
       props.dirty = this.state._dirty[field.id]
-      props.errorText = errors ? errors[field.id] : ''
+      props.errorText = this.state._error ? this.state._error[field.id] : ''
       props.margin = 'dense'
 
       return <field.component key={field.id} {...props} />
     })
   }
 
-  renderForm = (classes, fields, values, errors, actions, readonly, profile) => {
+  renderForm = (classes, fields, actions, readonly, profile) => {
     return (
       <form>
         <div className={classes.content}>
-          {this.renderFields(fields, values, errors, readonly, profile)}
+          {this.renderFields(fields, readonly, profile)}
         </div>
         <div className={classes.actions}>
           {actions && actions.map((action, index) => (
@@ -139,11 +139,11 @@ class SimpleForm extends React.Component {
   }
 
   render() {
-    const { fields, values, errors, actions, readonly, profile, classes, border } = this.props
+    const { fields, actions, readonly, profile, classes, border } = this.props
 
     return (
       <Paper className={classes.content} border={border}>
-        {this.renderForm(classes, fields, values, errors, actions, readonly, profile)}
+        {this.renderForm(classes, fields, actions, readonly, profile)}
       </Paper>
     )
   }

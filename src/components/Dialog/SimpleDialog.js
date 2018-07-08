@@ -57,7 +57,7 @@ class SimpleDialog extends React.Component {
   }
 
   render() {
-    const { classes, open, title, size, children, onClose } = this.props
+    const { classes, open, title, size, DialogBar, children, onClose } = this.props
     
     return (
       <Dialog
@@ -69,7 +69,7 @@ class SimpleDialog extends React.Component {
         maxWidth={size === 'full' ? false : size}
         disableBackdropClick
       >
-        {this.renderAppBar(classes, title, onClose)}
+        {DialogBar ? DialogBar : this.renderAppBar(classes, title, onClose)}
         <div className={ClassNames(classes.dialogContent, title && classes.title, ['md', 'lg', 'full'].includes(size) && classes.dialogBackground)}>
           {children}
         </div>
@@ -84,6 +84,7 @@ SimpleDialog.propTypes = {
   title: PropTypes.string,
   open: PropTypes.bool,
   size: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'full']),
+  DialogBar: PropTypes.node,
   children: PropTypes.node,
   onClose: PropTypes.func.isRequired,
 }
